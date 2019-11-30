@@ -39,5 +39,9 @@
 
 #include <fstream> // C++ standard file streams
 
+#include <vector> // C++ standard vector container
+
+#include <algorithm> // C++ standard algorithm header
+
 
 #endif // !PCH_H

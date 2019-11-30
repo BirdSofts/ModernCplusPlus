@@ -23,6 +23,7 @@
     <ClInclude Include="pch.h" />
     <ClInclude Include="resource.h" />
     <ClInclude Include="_1_Introduction.h" />
+    <ClInclude Include="_2_UsabilityEnhancements.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include=".gitattributes" />
@@ -41,6 +42,7 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="_1_Introduction.cpp" />
+    <ClCompile Include="_2_UsabilityEnhancements.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="CMakeLists.txt" />
