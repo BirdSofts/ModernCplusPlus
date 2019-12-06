@@ -24,6 +24,7 @@
     <ClInclude Include="resource.h" />
     <ClInclude Include="_1_Introduction.h" />
     <ClInclude Include="_2_UsabilityEnhancements.h" />
+    <ClInclude Include="_3_RuntimeEnhancements.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include=".gitattributes" />
@@ -43,6 +44,7 @@
     </ClCompile>
     <ClCompile Include="_1_Introduction.cpp" />
     <ClCompile Include="_2_UsabilityEnhancements.cpp" />
+    <ClCompile Include="_3_RuntimeEnhancements.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="CMakeLists.txt" />

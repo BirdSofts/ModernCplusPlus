@@ -10,13 +10,14 @@
 /// In the source code encountered in mind foreseen as future todos can be seen as such tasks that encourage the nerd community... :|
 /// </summary>
 /// <created>ʆϒʅ,27.11.2019</created>
-/// <changed>ʆϒʅ,30.11.2019</changed>
+/// <changed>ʆϒʅ,07.12.2019</changed>
 // --------------------------------------------------------------------------------
 
 #include "pch.h"
 #include "Console.h"
 #include "_1_Introduction.h"
 #include "_2_UsabilityEnhancements.h"
+#include "_3_RuntimeEnhancements.h"
 
 
 int main ()
@@ -96,6 +97,15 @@ int main ()
     _02_03_VariablesAndInitialization ();
     _02_04_TypeInference ();
     _02_05_ControlFlow ();
+    _02_06_Templates ();
+    _02_07_ObjectOriented ();
+
+    //! .................................:: LANGUAGE RUNTIME ENHANCEMENTS ::.................................
+    ColourCouter ( " +++++++++++++++++++++++++++++++++++++++++++++++++", F_bRED );
+    ColourCouter ( "+++++++++++++++++++++++++++++++++++++++++++++++++\n", F_bRED );
+    ColourCouter ( ".:: LANGUAGE RUNTIME ENHANCEMENTS ::.\n", F_CYAN );
+
+    _03_01_ ();
 
     ColourCouter ( " +++++++++++++++++++++++++++++++++++++++++++++++++", F_bRED );
     ColourCouter ( "+++++++++++++++++++++++++++++++++++++++++++++++++\n", F_bRED );

@@ -4,7 +4,7 @@
 /// _1_Introduction.cpp
 /// </summary>
 /// <created>ʆϒʅ,27.11.2019</created>
-/// <changed>ʆϒʅ,30.11.2019</changed>
+/// <changed>ʆϒʅ,06.12.2019</changed>
 // --------------------------------------------------------------------------------
 
 #include "pch.h"
@@ -257,6 +257,14 @@ void _02_04_TypeInference ()
 }
 
 
+template<typename tType>
+const auto& evaluation ( const tType& input )
+{
+  if constexpr (std::is_signed_v<tType>)
+    return "Negative";
+  else
+    return "Positive";
+}
 void _02_05_ControlFlow ()
 {
   try
@@ -267,15 +275,300 @@ void _02_05_ControlFlow ()
     ColourCouter ( "----- Control flow:\n", F_bWHITE );
     ColourCouter ( "To some extend modern C++ expands the features of statement and flow control.\n\n", F_YELLOW );
 
-    //! ---
-    //
-    ColourCouter ( ".\n\n", F_YELLOW );
+    //! --- if constexpr
+    // from C++17 the condition of a constant expression can be declared using if statement,
+    // which results to efficiency considering that the compilation of branch judgement happens at compile time.
+    ColourCouter ( "Using if constexpr, it is possible to evaluate constant expressions at compile time.\n\n", F_YELLOW );
+    std::cout << evaluation ( -3 ) << Nline << Nline;
+
+    //! --- range-based for loop
+    // modern C++ introduces range-based iterative method, resulting to code containing concise loops.
+    ColourCouter ( "To iterate more concise, modern C++ interposes range-based loops.\n\n", F_YELLOW );
+    std::vector<char> container = { 'a', 'b', 'c' };
+    if (
+      auto entity = std::find ( container.begin (), container.end (), 'd' );
+      entity == container.end ()
+      )
+    {
+      container.push_back ( 'd' );
+    }
+    for (auto& entity : container) // read/write privilege
+    {
+      std::cout << entity << Tab;
+      entity -= 32;
+    }
+    std::cout << Nline;
+    for (auto entity : container) // read privilege
+    {
+      std::cout << entity << Tab;
+    }
+    std::cout << Nline << Nline;
+  }
+  catch (const std::exception&)
+  {
+
+  }
+}
 
 
+template<typename typeOne, typename typeTwo>
+class tempType
+{
+public:
+  typeOne one;
+  typeTwo two;
+};
+template<typename typeOne>
+using alias = tempType<std::vector<typeOne>, std::string>;
 
-    //ColourCouter ( "\n", F_bYELLOW );
-    //ColourCouter ( "\n", F_bCYAN );
+template<typename tTypeA = int, typename tTypeB = float>
+auto addition ( tTypeA a, tTypeB b )
+{
+  return a + b;
+}
+
+template<typename... tTypeInfinite> // zero to an infinite number template paramters
+class infinite_A {};
+template<typename tTypeRequired, typename... tTypeOthers> // at least one template parameter
+class infinite_B {};
+
+// method: recursive template function: recursively traverse all template parameters
+template<typename tTemp>
+void unpack_rec ( tTemp arg )
+{
+  std::cout << arg << Nline;
+};
+template<typename tTypeReq, typename... tTypeArgs>
+void unpack_rec ( tTypeReq arg, tTypeArgs... elements )
+{
+  std::cout << arg << Tab;
+  unpack_rec ( elements... );
+};
+// method: variable parameter template expansion: recursive in one function (from C++17)
+template<typename tTypeReq, typename... tTypeArgs>
+void unpack_prmE ( tTypeReq arg, tTypeArgs... elements )
+{
+  std::cout << arg << Tab;
+  if constexpr (sizeof...(elements) > 0)
+    unpack_prmE ( elements... );
+  else
+    std::cout << Nline;
+};
+// method: initialize list expansion: using the features provided by Lambada expressions
+template<typename tTypeReq, typename... tTypeArgs>
+void unpack_initialE ( tTypeReq arg, tTypeArgs... elements )
+{
+  std::cout << arg << Tab;
+
+  // after list initialization, the expansion of Lambada expression happens,
+  // and the comma operator initiates the execution of preceding expression first,
+  // through which the output is complete.
+  // note that the explicit conversion to void is to avoid compiler warnings
+  // note try debugging the lines to watch the algorithm behaviour step by step.
+  (void) std::initializer_list<tTypeReq>
+  {
+    // (Lambada expression, arg)
+    ([&elements] { std::cout << elements << Tab; }(), arg)...
+  };
+
+  std::cout << Nline << Nline;
+};
+
+template<typename... tTempType>
+auto multiplyThePack ( tTempType... input )
+{
+  return (input * ...);
+};
+
+template<int number, typename T>
+void printOne ( T text )
+{
+  std::cout << text << Tab << number << Nline;
+};
+template<auto input>
+void printTwo ( const std::string& text )
+{
+  std::cout << text << Tab << input << Nline;
+};
+void _02_06_Templates ()
+{
+  try
+  {
+    //! ####################################################################
+    //! ----- templates:
+    // the known black magic of C++ language has been expanded with new features in moderner versions.
+    ColourCouter ( "----- Templates:\n", F_bWHITE );
+    ColourCouter ( "In modern C++ templates and generic codes are even more elaborated.\n\n", F_YELLOW );
+
+    //! --- extern templates
+    // the conventional way in traditional C++ is to instantiate each defined template code
+    // in the instance it is encountered by compiler, which results to increased compile time if instantiations are repeated.
+    // interposing extern keyword, C++11 extends the templates definition syntax,
+    // which manipulates the original compiler behaviour,
+    // providing the ability to explicitly decide where and when to instantiate the defined template.
+    ColourCouter ( "Modern C++ introduces the possibility to enforce template instantiations.\n\n", F_YELLOW );
+
+    // to force instantiation in a compilation unit:
+    //template class std::vector<int>;
+
+    // to prevent instantiation in a compilation unit:
+    // note that the same instantiation must have already been encountered by compiler
+    // in another object file in connection with current compilation unit
+    //extern temlate class std::vector<int>;
+
+    //! --- continuous right angle brackets
+    // concerning templates definitions, modern C++ treat continuous right angle brackets correctly.
+    // in traditional C++  two of the were accepted an compiled to right shift operator.
+    ColourCouter ( "In modern C++ complex templates can be compiled.\n\n", F_YELLOW );
+    std::vector<std::vector<int>> _2D_array; // a not-compilable expression in traditional c++
+    for (int i = 0; i < 3; i++)
+    {
+      _2D_array.push_back ( { i, i } );
+    }
+    for (auto entity : _2D_array)
+    {
+      for (auto element : entity)
+      {
+        std::cout << element << Tab;
+      }
+      std::cout << Nline;
+    }
+    std::cout << Nline;
+
+    //! --- template type alias
+    // in modern C++ using keyword can be used to introduces aliases for template types.
+    ColourCouter ( "The keyword using aliases template types likewise.\n\n", F_YELLOW );
+    alias<int> test;
+    test.one.push_back ( 1 );
+    test.two = " is odd.";
+    std::cout << test.one.front () << test.two << Nline << Nline;
+
+    //! --- default template parameters
+    // to prevent the constant need to specify the template type at the moment of each instantiation,
+    // C++11 provide the ability to define default parameters of a template type.
+    ColourCouter ( "Templates can introduce their default template parameters.\n\n", F_YELLOW );
+    std::cout << addition ( 1, .1f ) << Nline << Nline;
+
+    //! --- variadic templates
+    // modern C++ provides the concept of templates with an infinite number of template parameters of any category
+    // as a pack without the need to specify the number of parameters at definition time.
+    // note syntax template<typename... tName> class class_name;
+    // this template class can accept zero to infinite number of template parameters without restriction.
+    ColourCouter ( "Templates can be introduced with an infinite number of parameters.\n\n", F_YELLOW );
+    infinite_A<> testOne; // zero template parameters
+    infinite_B<short, int, float, double> testTwo; // four template parameters
+
+    infinite_B<int> testThree; // at least one template parameter
+
     //! - in addition:
+    // there are different methods to unpack the template parameter pack
+    //--- the number of arguments is determined by sizeof...() operator
+    // note pay close attention to the use of infinite number operator (...)
+    unpack_rec ( "Method: recursive template function\t", 1, 2, 3.3 );
+    unpack_prmE ( "Method: variable parameter template expansion", 1, 2, 3.3 ); // (from C++17)
+    unpack_initialE ( "Method: initialize list expansion\t", 1, 2, 3.3 );
+
+    //! - research: using std::bind to forward and bind the template parameters
+
+    //! --- fold expression
+    // from C++ 17, packed template parameters can additionally be expanded and used in simple expressions.
+    ColourCouter ( "Expression can harness the features provided through packed template parameters.\n\n", F_YELLOW );
+    std::cout << multiplyThePack ( 2, 2, 2, 2, 2, 2, 2, 2, 2, 2 ) << Nline << Nline;
+
+    //! --- not-type template parameter deduction
+    // modern C++ makes type deduction even in template parameters possible
+    // and in C++17 the more elaborated version of this feature is introduced to further simplify the process
+    // by using the auto keyword and not providing the exact type of template parameter.
+    ColourCouter ( "Template parameters types can be deduced.\n\n", F_YELLOW );
+    printOne<1> ( "Not using auto keyword:" );
+    printTwo<1> ( "Using auto keyword:" ); // from C++17
+    std::cout << Nline;
+  }
+  catch (const std::exception&)
+  {
+
+  }
+}
+
+
+class delegate
+{
+private:
+  int entity;
+public:
+  delegate () : entity ( 3 ) {};
+  delegate ( int input ) : delegate ()
+  {
+    for (int i = 0; i < entity; i++)
+      input *= input;
+    entity = input;
+  };
+  int getResult () { return entity; };
+};
+class inherited : public delegate
+{
+public:
+  using delegate::delegate; // inherit constructors of base class
+};
+class Base
+{
+private:
+public:
+  virtual void toOverload () {};
+  virtual void notToOverload () final {}; // final: overloading not possible
+};
+class Subclass final : public Base // final: no further inheritance is possible
+{
+private:
+public:
+  void toOverload () override {}; // legal: virtual function exists
+  //void toOverload ( int a ) override {}; // illegal: no virtual function exists
+  //void notToOverload () {}; // illegal: final
+};
+//class SubTwo : public Subclass // illegal: final
+//{
+//private:
+//public:
+//};
+void _02_07_ObjectOriented ()
+{
+  try
+  {
+    //! ####################################################################
+    //! ----- object-oriented:
+    // as development of C++ language steps forward, the concepts of OOP becomes more elaborated.
+    ColourCouter ( "----- Object-oriented:\n", F_bWHITE );
+    ColourCouter ( "C++ language as an object-oriented programming language is in constant expansion.\n\n", F_YELLOW );
+
+    //! --- delegate constructor
+    // for convenient and simplicity sake, C++11 equips the concept of classes with delegate constructor,
+    // to which a call from the constructor of the class is to undertake.
+    ColourCouter ( "A class constructor can call other constructors of the class as its delegate.\n\n", F_YELLOW );
+    delegate one ( 2 );
+    std::cout << "The result is:" << Tab << one.getResult () << Nline << Nline;
+
+    //! --- inheritance constructor
+    // using the using keyword,
+    // modern C++ (from C++11) expands the concepts of inheritance between classes even to their constructors further,
+    // thus cutting on efficiency issues, when passing arguments to constructors of a base class.
+    ColourCouter ( "In modern C++ the constructors of a base class can be inherited.\n\n", F_YELLOW );
+    inherited subOne ( 2 );
+    std::cout << "The result is:" << Tab << subOne.getResult () << Nline << Nline;
+
+    //! --- explicit virtual function overwrite
+    // accidental overloading or not overloading virtual functions by programmer,
+    // either reasoned through the wish of having two functions with the same name,
+    // or a deleted virtual function inherited and not overloaded because of the ownership over the deleted version,
+    // are catastrophic, for which to overcome C++11 introduces the keywords override and final.
+
+    //! the keyword override
+    // preceded by overload's declaration, explicitly tells the compiler to overload,
+    // resulting to no compilation if virtual function doesn't exist.
+
+    //! the keyword final
+    // preceded by virtual function's declaration, explicitly makes the overload process impossible.
+    // preceded by class's declaration, explicitly breaks the inheritance feature there of.
+    ColourCouter ( "Ownership over virtual functions can be explicitly controlled.\n\n", F_YELLOW );
   }
   catch (const std::exception&)
   {
